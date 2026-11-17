@@ -1,0 +1,21 @@
+name: Deploy Monitoring Stack
+
+on:
+  push:
+    paths:
+      - 'monitoring/**'
+
+jobs:
+  deploy-mon:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Connect to EC2 and deploy Prometheus & Grafana
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: admin
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd /home/admin/observabilidad_y_monitoreo
+            git pull
+            docker compose up -d prometheus grafana
