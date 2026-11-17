@@ -1,0 +1,19 @@
+name: Deploy App to EC2
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Connect to EC2 and deploy app
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: admin
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd /home/admin/observabilidad_y_monitoreo
+            git pull
+            docker compose up -d app
